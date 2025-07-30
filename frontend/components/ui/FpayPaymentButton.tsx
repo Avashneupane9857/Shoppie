@@ -126,6 +126,25 @@ export default function FpayPaymentButton({ cartItems, totalAmount, onSuccess, o
 
   useEffect(() => {
     if (cartItems?.length > 0) {
+      // Intercept fetch calls to redirect wrong API calls to correct domain
+      const originalFetch = window.fetch;
+      window.fetch = function(input: RequestInfo | URL, init?: RequestInit) {
+        const url = input.toString();
+        
+        // Redirect wrong API calls to correct domain
+        if (url.includes('uat-bank-getpay.nchl.com.np')) {
+          const correctedUrl = url.replace(
+            'https://uat-bank-getpay.nchl.com.np/migration/ecom-gateway/v1/secure-merchant/transactions',
+            'https://getpay-uat.machbank.com/ecom-gateway/v1/secure-merchant/transactions'
+          );
+          console.log('Redirecting API call from:', url);
+          console.log('To:', correctedUrl);
+          return originalFetch(correctedUrl, init);
+        }
+        
+        return originalFetch(input, init);
+      };
+
       const script = document.createElement('script');
       script.src = BUNDLE_URL;
       script.async = true;
@@ -144,6 +163,8 @@ export default function FpayPaymentButton({ cartItems, totalAmount, onSuccess, o
         if (existingScript) {
           document.body.removeChild(existingScript);
         }
+        // Restore original fetch
+        window.fetch = originalFetch;
       };
     }
   }, [cartItems]);
