@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
@@ -13,7 +13,7 @@ export default function PaymentCancel() {
   const orderId = searchParams.get('orderId')
 
   useEffect(() => {
-    // Simulate fetching order details from backend
+    
     const fetchOrderDetails = async () => {
       try {
         // In real implementation, make API call to your backend
