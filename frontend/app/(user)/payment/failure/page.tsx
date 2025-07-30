@@ -2,12 +2,12 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { XCircle, RefreshCw, Home, HelpCircle, Phone } from 'lucide-react'
 
-export default function PaymentFailure() {
+function PaymentFailureContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [orderDetails, setOrderDetails] = useState<any>(null)
@@ -101,9 +101,7 @@ export default function PaymentFailure() {
             
             <div className="py-2">
               <span className="text-gray-600 block mb-2">Error Message:</span>
-              <p className="text-red-600 bg-red-50 p-3 rounded-lg">
-                {orderDetails?.errorMessage}
-              </p>
+              <p className="text-red-600 text-sm">{orderDetails?.errorMessage}</p>
             </div>
           </div>
 
@@ -122,48 +120,65 @@ export default function PaymentFailure() {
         </div>
 
         {/* Action Buttons */}
-        <div className="max-w-2xl mx-auto space-y-4">
-          <Link
-            href={`/check-out?orderId=${orderDetails?.orderId}`}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#E73C17] text-white rounded-lg hover:bg-[#d63615] transition-colors font-semibold"
+        <div className="max-w-2xl mx-auto flex flex-col sm:flex-row gap-4">
+          <button 
+            onClick={() => router.back()}
+            className="flex-1 bg-[#E73C17] hover:bg-[#d63615] text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
           >
             <RefreshCw className="w-5 h-5" />
-            Try Payment Again
-          </Link>
+            Try Again
+          </button>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Link
-              href="/"
-              className="flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
-            >
-              <Home className="w-5 h-5" />
-              Continue Shopping
-            </Link>
-            
-            <Link
-              href="/contact"
-              className="flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
-            >
-              <HelpCircle className="w-5 h-5" />
-              Contact Support
-            </Link>
-          </div>
+          <Link 
+            href="/"
+            className="flex-1 bg-white hover:bg-gray-50 text-[#E73C17] py-3 px-6 rounded-lg font-semibold transition-colors border border-[#E73C17] flex items-center justify-center gap-2"
+          >
+            <Home className="w-5 h-5" />
+            Go Home
+          </Link>
         </div>
 
-        {/* Support Information */}
-        <div className="max-w-2xl mx-auto mt-8 bg-blue-50 rounded-lg p-6">
-          <h3 className="font-semibold text-black mb-3">Need Help?</h3>
-          <div className="space-y-2 text-sm text-gray-700">
-            <p>• Check your internet connection and try again</p>
-            <p>• Ensure your payment method has sufficient funds</p>
-            <p>• Contact our support team if the problem persists</p>
-            <div className="flex items-center gap-2 mt-3">
-              <Phone className="w-4 h-4 text-[#E73C17]" />
-              <span>Support: +977-1-4XXXXXX</span>
+        {/* Support Section */}
+        <div className="max-w-2xl mx-auto mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-black mb-4">Need Help?</h3>
+          <div className="space-y-4">
+            <div className="flex items-start gap-3">
+              <HelpCircle className="w-5 h-5 text-gray-500 mt-0.5" />
+              <div>
+                <h4 className="font-medium text-black mb-1">Contact Support</h4>
+                <p className="text-sm text-gray-600 mb-2">Our support team is available 24/7 to help you.</p>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <Phone className="w-4 h-4" />
+                  <span>+977-1-2345678</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-start gap-3">
+              <div className="w-5 h-5 text-gray-500 mt-0.5">📧</div>
+              <div>
+                <h4 className="font-medium text-black mb-1">Email Support</h4>
+                <p className="text-sm text-gray-600">support@kinamna.com</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  )
+}
+
+export default function PaymentFailure() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-[#E73C17] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <PaymentFailureContent />
+    </Suspense>
   )
 } 

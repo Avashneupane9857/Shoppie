@@ -2,12 +2,12 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { X, RefreshCw, Home, ShoppingBag } from 'lucide-react'
 
-export default function PaymentCancel() {
+function PaymentCancelContent() {
   const searchParams = useSearchParams()
   const [orderDetails, setOrderDetails] = useState<any>(null)
   const [loading, setLoading] = useState(true)
@@ -15,7 +15,7 @@ export default function PaymentCancel() {
   const orderId = searchParams.get('orderId')
 
   useEffect(() => {
-    
+    // Simulate fetching order details from backend
     const fetchOrderDetails = async () => {
       try {
         // In real implementation, make API call to your backend
@@ -105,45 +105,45 @@ export default function PaymentCancel() {
         </div>
 
         {/* Action Buttons */}
-        <div className="max-w-2xl mx-auto space-y-4">
-          <Link
-            href={`/check-out?orderId=${orderDetails?.orderId}`}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#E73C17] text-white rounded-lg hover:bg-[#d63615] transition-colors font-semibold"
+        <div className="max-w-2xl mx-auto flex flex-col sm:flex-row gap-4">
+          <Link 
+            href="/check-out"
+            className="flex-1 bg-[#E73C17] hover:bg-[#d63615] text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
           >
             <RefreshCw className="w-5 h-5" />
             Complete Payment
           </Link>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Link
-              href="/"
-              className="flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
-            >
-              <Home className="w-5 h-5" />
-              Continue Shopping
-            </Link>
-            
-            <Link
-              href={`/orders/${orderDetails?.orderId}`}
-              className="flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
-            >
-              <ShoppingBag className="w-5 h-5" />
-              View Order
-            </Link>
-          </div>
+          <Link 
+            href="/"
+            className="flex-1 bg-white hover:bg-gray-50 text-[#E73C17] py-3 px-6 rounded-lg font-semibold transition-colors border border-[#E73C17] flex items-center justify-center gap-2"
+          >
+            <Home className="w-5 h-5" />
+            Continue Shopping
+          </Link>
         </div>
 
         {/* Additional Info */}
-        <div className="max-w-2xl mx-auto mt-8 bg-yellow-50 rounded-lg p-6">
-          <h3 className="font-semibold text-black mb-3">What happens next?</h3>
-          <div className="space-y-2 text-sm text-gray-700">
-            <p>• Your order is saved and waiting for payment</p>
-            <p>• You can complete the payment anytime</p>
-            <p>• Orders are held for 24 hours before cancellation</p>
-            <p>• You&apos;ll receive email reminders</p>
-          </div>
+        <div className="max-w-2xl mx-auto mt-8 text-center text-sm text-gray-500">
+          <p>Your order is saved and ready for payment completion.</p>
+          <p className="mt-1">You can complete the payment anytime from your orders page.</p>
         </div>
       </div>
     </div>
+  )
+}
+
+export default function PaymentCancel() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-[#E73C17] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <PaymentCancelContent />
+    </Suspense>
   )
 } 

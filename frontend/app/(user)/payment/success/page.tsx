@@ -2,12 +2,12 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { CheckCircle, Package, Home, ShoppingBag } from 'lucide-react'
 
-export default function PaymentSuccess() {
+function PaymentSuccessContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [orderDetails, setOrderDetails] = useState<any>(null)
@@ -42,10 +42,10 @@ export default function PaymentSuccess() {
         setOrderDetails(mockOrderDetails)
       } catch (error) {
         console.error('Error fetching order details:', error)
-      } finally {
-        setLoading(false)
+              } finally {
+          setLoading(false)
+        }
       }
-    }
 
     fetchOrderDetails()
   }, [orderId, transactionId, amount])
@@ -114,46 +114,54 @@ export default function PaymentSuccess() {
             </div>
           </div>
 
-          {/* Delivery Info */}
+          {/* Delivery Information */}
           <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <div className="flex items-start gap-3">
-              <Package className="w-5 h-5 text-gray-500 mt-0.5" />
-              <div>
-                <h4 className="font-medium text-black mb-1">Delivery Information</h4>
-                <p className="text-sm text-gray-600 mb-2">{orderDetails?.deliveryAddress}</p>
-                <p className="text-sm text-gray-600">
-                  Estimated delivery: {orderDetails?.estimatedDelivery}
-                </p>
-              </div>
-            </div>
+            <h3 className="font-medium text-black mb-2">Delivery Information</h3>
+            <p className="text-gray-600 text-sm">{orderDetails?.deliveryAddress}</p>
+            <p className="text-gray-600 text-sm mt-1">Estimated delivery: {orderDetails?.estimatedDelivery}</p>
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="max-w-2xl mx-auto flex flex-col sm:flex-row gap-4">
-          <Link
+          <Link 
             href="/"
-            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-[#E73C17] text-white rounded-lg hover:bg-[#d63615] transition-colors font-semibold"
+            className="flex-1 bg-[#E73C17] hover:bg-[#d63615] text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
           >
             <Home className="w-5 h-5" />
             Continue Shopping
           </Link>
           
-          <Link
-            href={`/orders/${orderDetails?.orderId}`}
-            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
+          <Link 
+            href="/orders"
+            className="flex-1 bg-white hover:bg-gray-50 text-[#E73C17] py-3 px-6 rounded-lg font-semibold transition-colors border border-[#E73C17] flex items-center justify-center gap-2"
           >
-            <ShoppingBag className="w-5 h-5" />
-            View Order
+            <Package className="w-5 h-5" />
+            View Orders
           </Link>
         </div>
 
         {/* Additional Info */}
-        <div className="max-w-2xl mx-auto mt-8 text-center text-sm text-gray-600">
+        <div className="max-w-2xl mx-auto mt-8 text-center text-sm text-gray-500">
           <p>You will receive an email confirmation shortly.</p>
-          <p>For any questions, please contact our support team.</p>
+          <p className="mt-1">If you have any questions, please contact our support team.</p>
         </div>
       </div>
     </div>
+  )
+}
+
+export default function PaymentSuccess() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-[#E73C17] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <PaymentSuccessContent />
+    </Suspense>
   )
 } 
