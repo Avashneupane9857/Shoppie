@@ -63,13 +63,13 @@ export default function FpayPaymentButton({ cartItems, totalAmount, onSuccess, o
         address: "Chabahil",
       },
       clientRequestId: "CLIENT123",
-      papInfo: process.env.NEXT_PUBLIC_PAP_INFO || 'eyJpbnN0aXR1dGlvbklkIjoiMDAwIiwibWlkIjoiMTUwMTU1NTU2MDAxMDAxIiwidGlkIjoiMTUwMTAwMTIifQ==',
-      oprKey: process.env.NEXT_PUBLIC_OPR_KEY || '4fa4c6b9-3f91-43e5-9b4f-319f68187ba5',
+      papInfo: process.env.NEXT_PUBLIC_PAP_INFO || '',
+      oprKey: process.env.NEXT_PUBLIC_OPR_KEY || '',
       insKey: process.env.NEXT_PUBLIC_INS_KEY || '',
-      websiteDomain: process.env.NEXT_PUBLIC_WEBSITE_DOMAIN || 'shoppie-mu.vercel.app',
+      websiteDomain: process.env.NEXT_PUBLIC_WEBSITE_DOMAIN || '',
       price: totalAmount,
-      businessName: process.env.NEXT_PUBLIC_BUSINESS_NAME || 'Kinamna Store',
-      imageUrl: process.env.NEXT_PUBLIC_LOGO_URL || '/newImages/logo.png',
+      businessName: process.env.NEXT_PUBLIC_BUSINESS_NAME || 'OneStop Shopping - Pokhara',
+      imageUrl: process.env.NEXT_PUBLIC_LOGO_URL || '',
       currency: "NPR",
       prefill: {
         name: true,
@@ -85,8 +85,8 @@ export default function FpayPaymentButton({ cartItems, totalAmount, onSuccess, o
         state: true,
       },
       callbackUrl: {
-        successUrl: process.env.NEXT_PUBLIC_SUCCESS_URL || '/payment/success',
-        failUrl: process.env.NEXT_PUBLIC_FAIL_URL || '/payment/failure',
+        successUrl: process.env.NEXT_PUBLIC_SUCCESS_URL || '',
+        failUrl: process.env.NEXT_PUBLIC_FAIL_URL || '',
       },
       themeColor: "#5662FF",
       orderInformationUI: orderInformationHtml,
@@ -126,25 +126,6 @@ export default function FpayPaymentButton({ cartItems, totalAmount, onSuccess, o
 
   useEffect(() => {
     if (cartItems?.length > 0) {
-      // Intercept fetch calls to redirect wrong API calls to correct domain
-      const originalFetch = window.fetch;
-      window.fetch = function(input: RequestInfo | URL, init?: RequestInit) {
-        const url = input.toString();
-        
-        // Redirect wrong API calls to correct domain
-        if (url.includes('uat-bank-getpay.nchl.com.np')) {
-          const correctedUrl = url.replace(
-            'https://uat-bank-getpay.nchl.com.np/migration/ecom-gateway/v1/secure-merchant/transactions',
-            'https://getpay-uat.machbank.com/ecom-gateway/v1/secure-merchant/transactions'
-          );
-          console.log('Redirecting API call from:', url);
-          console.log('To:', correctedUrl);
-          return originalFetch(correctedUrl, init);
-        }
-        
-        return originalFetch(input, init);
-      };
-
       const script = document.createElement('script');
       script.src = BUNDLE_URL;
       script.async = true;
@@ -163,8 +144,7 @@ export default function FpayPaymentButton({ cartItems, totalAmount, onSuccess, o
         if (existingScript) {
           document.body.removeChild(existingScript);
         }
-        // Restore original fetch
-        window.fetch = originalFetch;
+                // Cleanup
       };
     }
   }, [cartItems]);

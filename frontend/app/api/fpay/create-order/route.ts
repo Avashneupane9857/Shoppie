@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const FPAY_API_BASE = 'https://getpay-uat.machbank.com/ecom-gateway/v1/secure-merchant/transactions';
-const FPAY_PAP_INFO = 'eyJpbnN0aXR1dGlvbklkIjoiMDAwIiwibWlkIjoiMTUwMTU1NTU2MDAxMDAxIiwidGlkIjoiMTUwMTAwMTIifQ==';
-const FPAY_OPR_KEY = '4fa4c6b9-3f91-43e5-9b4f-319f68187ba5';
-const FPAY_INS_KEY = '';
-const FPAY_TID = '15010012';
+const FPAY_API_BASE = 'https://uat-bank-getpay.nchl.com.np/migration/ecom-gateway/v1/secure-merchant/transactions';
+const FPAY_PAP_INFO = process.env.NEXT_PUBLIC_PAP_INFO || '';
+const FPAY_OPR_KEY = process.env.NEXT_PUBLIC_OPR_KEY || '';
+const FPAY_INS_KEY = process.env.NEXT_PUBLIC_INS_KEY || '';
+const FPAY_TID = '12345678'; // Using the TID from your PAP_INFO
 const FPAY_CURRENCY = 'NPR';
 
 export async function POST(request: NextRequest) {
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     orderForm.append('amount', amount.toString());
     orderForm.append('currency', FPAY_CURRENCY);
     orderForm.append('orderid', orderId);
-    orderForm.append('redirect_url', 'https://shoppie-mu.vercel.app/payment/success');
+    orderForm.append('redirect_url', process.env.NEXT_PUBLIC_SUCCESS_URL || 'https://www.store.com/success.html');
 
     const orderRes = await fetch(`${FPAY_API_BASE}/generate_orders`, {
       method: 'POST',
