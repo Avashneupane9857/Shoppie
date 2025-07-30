@@ -131,7 +131,7 @@ export default function Orders({ params }: { params: { userId: string } }) {
   ]
 
   const filteredOrders = selectedStatus === 'all'
-    ? orders
+    ? orders 
     : orders.filter(order => order.status === selectedStatus)
 
   return (
@@ -149,8 +149,8 @@ export default function Orders({ params }: { params: { userId: string } }) {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-black mb-2 md:mb-0">My Orders</h1>
-              <p className="text-gray-600 text-sm md:text-base">Track your orders and view order history</p>
-            </div>
+          <p className="text-gray-600 text-sm md:text-base">Track your orders and view order history</p>
+        </div>
             <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto">
               <label htmlFor="order-status" className="text-sm font-medium text-gray-700 whitespace-nowrap">Filter by status:</label>
               <StatusDropdown
@@ -158,7 +158,7 @@ export default function Orders({ params }: { params: { userId: string } }) {
                 value={selectedStatus}
                 onChange={setSelectedStatus}
               />
-            </div>
+                </div>
           </div>
         </div>
 

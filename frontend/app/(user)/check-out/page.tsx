@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Check } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import FpayPaymentButton from '@/components/ui/FpayPaymentButton';
 
 export default function CheckOut() {
   const router = useRouter()
@@ -59,6 +60,23 @@ export default function CheckOut() {
       return () => clearTimeout(timer)
     }
   }, [showModal, router])
+
+  const handlePaymentSuccess = (data: any) => {
+    console.log('Payment successful:', data);
+    // Update order status, redirect to success page, etc.
+    // You can also update your backend here
+  };
+
+  const handlePaymentFailure = (error: string) => {
+    console.log('Payment failed:', error);
+    // Show error message to user
+    // You can also update your backend here
+  };
+
+  const handlePaymentCancel = () => {
+    console.log('Payment cancelled');
+    // Handle payment cancellation
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -249,6 +267,28 @@ export default function CheckOut() {
                   <button className="px-4 py-2 bg-[#E73C17] text-white hover:bg-[#d63615] transition-colors rounded-md text-sm">
                     Apply Coupon
                   </button>
+                </div>
+              </div>
+
+              {/* Payment Section */}
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h2 className="text-xl font-semibold text-black mb-4">Payment Method</h2>
+                
+                {/* Fonepay Payment Button */}
+                <div className="mt-4">
+                  <FpayPaymentButton
+                    cartItems={cartItems}
+                    totalAmount={total}
+                    onSuccess={handlePaymentSuccess}
+                    onError={handlePaymentFailure}
+                  />
+                </div>
+                
+                {/* Payment Info */}
+                <div className="mt-4 text-sm text-gray-600">
+                  <p>• Secure payment powered by Fpay</p>
+                  <p>• You will be redirected to Fpay for payment</p>
+                  <p>• Payment will be processed in Nepali Rupees (NPR)</p>
                 </div>
               </div>
 
