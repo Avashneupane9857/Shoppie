@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fonepay SDK Test</title>
+    <script src="https://minio.finpos.global/getpay-cdn/webcheckout/v5/bundle.js"></script>
+  </head>
+  <body>
+    <h1>Fonepay SDK Test</h1>
+    <pre id="output"></pre>
+    <script>
+      window.addEventListener('load', function() {
+        var output = document.getElementById('output');
+        if (window.Fonepay) {
+          output.textContent = 'window.Fonepay is defined.\\n' +
+            'Type: ' + typeof window.Fonepay + '\\n' +
+            'Keys: ' + Object.keys(window.Fonepay).join(', ') + '\\n' +
+            'Stringified: ' + JSON.stringify(window.Fonepay, null, 2);
+          console.log('window.Fonepay:', window.Fonepay);
+        } else {
+          output.textContent = 'window.Fonepay is NOT defined.';
+        }
+      });
+    </script>
+  </body>
+</html>
