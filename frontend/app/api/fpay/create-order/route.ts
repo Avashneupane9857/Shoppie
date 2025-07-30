@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     orderForm.append('amount', amount.toString());
     orderForm.append('currency', FPAY_CURRENCY);
     orderForm.append('orderid', orderId);
-    orderForm.append('redirect_url', 'http://localhost:3000/payment/success'); // Change to your deployed success URL in production
+    orderForm.append('redirect_url', 'https://shoppie-mu.vercel.app/payment/success');
 
     const orderRes = await fetch(`${FPAY_API_BASE}/generate_orders`, {
       method: 'POST',

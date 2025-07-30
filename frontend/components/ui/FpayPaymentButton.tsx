@@ -66,7 +66,7 @@ export default function FpayPaymentButton({ cartItems, totalAmount, onSuccess, o
       papInfo: process.env.NEXT_PUBLIC_PAP_INFO || 'eyJpbnN0aXR1dGlvbklkIjoiMDAwIiwibWlkIjoiMTUwMTU1NTU2MDAxMDAxIiwidGlkIjoiMTUwMTAwMTIifQ==',
       oprKey: process.env.NEXT_PUBLIC_OPR_KEY || '4fa4c6b9-3f91-43e5-9b4f-319f68187ba5',
       insKey: process.env.NEXT_PUBLIC_INS_KEY || '',
-      websiteDomain: process.env.NEXT_PUBLIC_WEBSITE_DOMAIN || 'localhost:3000',
+      websiteDomain: process.env.NEXT_PUBLIC_WEBSITE_DOMAIN || 'shoppie-mu.vercel.app',
       price: totalAmount,
       businessName: process.env.NEXT_PUBLIC_BUSINESS_NAME || 'Kinamna Store',
       imageUrl: process.env.NEXT_PUBLIC_LOGO_URL || '/newImages/logo.png',
@@ -102,7 +102,7 @@ export default function FpayPaymentButton({ cartItems, totalAmount, onSuccess, o
         
         // Handle specific error types
         if (error?.error?.includes('CORS') || error?.message?.includes('fetch')) {
-          toast.error('CORS Error: Please contact Fpay support to whitelist localhost:3000 for development');
+          toast.error('CORS Error: Please contact Fpay support to whitelist your domain for production');
         } else if (error?.error?.includes('crypto') || error?.message?.includes('words')) {
           toast.error('SDK Error: GetPay SDK crypto functions not available. Please contact Fpay support.');
         } else {
