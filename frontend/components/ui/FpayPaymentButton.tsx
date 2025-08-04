@@ -10,7 +10,8 @@ interface FpayPaymentButtonProps {
   onError?: (error: any) => void;
 }
 
-const BUNDLE_URL = '/bundle.js';
+// const BUNDLE_URL = '/bundle.js';
+const BUNDLE_URL = "https://minio.finpos.global/getpay-cdn/webcheckout/v5/bundle.js"
 
 const getOrderInformationHtml = (cartItems: any[], totalAmount: number) => {
   let html = `<div>
