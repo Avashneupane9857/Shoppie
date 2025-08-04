@@ -84,7 +84,7 @@ export default function FpayPaymentButton({ cartItems, totalAmount, onSuccess, o
       papInfo: process.env.NEXT_PUBLIC_PAP_INFO || '',
       oprKey: process.env.NEXT_PUBLIC_OPR_KEY || '',
       insKey: process.env.NEXT_PUBLIC_INS_KEY || '',
-      websiteDomain: process.env.NEXT_PUBLIC_WEBSITE_DOMAIN || '',
+      websiteDomain:'https://shoppie-mu.vercel.app/',
       price: totalAmount,
       businessName: process.env.NEXT_PUBLIC_BUSINESS_NAME || 'OneStop Shopping - Pokhara',
       imageUrl: process.env.NEXT_PUBLIC_LOGO_URL || '',
