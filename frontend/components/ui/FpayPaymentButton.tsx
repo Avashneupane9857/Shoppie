@@ -10,7 +10,7 @@ interface FpayPaymentButtonProps {
   onError?: (error: any) => void;
 }
 
-const BUNDLE_URL = process.env.NEXT_PUBLIC_BUNDLE_URL || 'https://minio.finpos.global/getpay-cdn/webcheckout/bundle.js';
+const BUNDLE_URL = '/bundle.js';
 
 const getOrderInformationHtml = (cartItems: any[], totalAmount: number) => {
   let html = `<div>
@@ -42,9 +42,27 @@ export default function FpayPaymentButton({ cartItems, totalAmount, onSuccess, o
   const [isLoading, setIsLoading] = useState(false);
   const [sdkLoaded, setSdkLoaded] = useState(false);
 
-  const initializeGetPay = () => {
+  useEffect(() => {
+    // Load the bundle.js script if not already loaded
     if (!window.GetPay) {
-      toast.error('GetPay SDK not loaded. Please refresh the page and try again.');
+      const script = document.createElement('script');
+      script.src = BUNDLE_URL;
+      script.async = true;
+      script.onload = () => {
+        setSdkLoaded(true);
+      };
+      script.onerror = () => {
+        toast.error('Failed to load GetPay SDK');
+      };
+      document.head.appendChild(script);
+    } else {
+      setSdkLoaded(true);
+    }
+  }, []);
+
+  const initializeGetPay = () => {
+    if (!sdkLoaded || !window.GetPay) {
+      toast.error('GetPay SDK not loaded. Please wait and try again.');
       return;
     }
 
@@ -124,30 +142,7 @@ export default function FpayPaymentButton({ cartItems, totalAmount, onSuccess, o
     }
   };
 
-  useEffect(() => {
-    if (cartItems?.length > 0) {
-      const script = document.createElement('script');
-      script.src = BUNDLE_URL;
-      script.async = true;
-      script.onload = () => {
-        console.log('GetPay script loaded successfully');
-        setSdkLoaded(true);
-      };
-      script.onerror = () => {
-        console.error('Failed to load GetPay script');
-        toast.error('Failed to load payment system');
-      };
-      document.body.appendChild(script);
-      
-      return () => {
-        const existingScript = document.querySelector(`script[src="${BUNDLE_URL}"]`);
-        if (existingScript) {
-          document.body.removeChild(existingScript);
-        }
-                // Cleanup
-      };
-    }
-  }, [cartItems]);
+
 
   return (
     <div className="w-full">
@@ -156,7 +151,7 @@ export default function FpayPaymentButton({ cartItems, totalAmount, onSuccess, o
         id="checkout-btn" 
         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         onClick={initializeGetPay}
-        disabled={isLoading || !cartItems?.length || !sdkLoaded}
+        disabled={isLoading || !cartItems?.length}
       >
         {isLoading ? 'Processing...' : 'Pay with Fpay'}
       </button>
